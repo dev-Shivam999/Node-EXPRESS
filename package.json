@@ -4,17 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@types/supertest": "^6.0.2",
     "express": "^4.21.1",
-    "prisma": "^5.22.0"
+    "prisma": "^5.22.0",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.5",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0"
+    "@jest/globals": "^29.7.0",
+    "@types/express": "^5.0.0",
+    "ts-jest": "^29.2.5"
   }
 }
