@@ -1,10 +1,8 @@
-
-import express, { Request, Response } from "express";
+import express from "express";
 import { z } from "zod";
 import { client } from "./db";
 
 export const app = express();
-
 app.use(express.json());
 
 const sumInput = z.object({
@@ -12,7 +10,7 @@ const sumInput = z.object({
     b: z.number()
 })
 
-app.post("/sum", async (req: Request, res: Response) => {
+app.post("/sum", async (req, res) => {
     const parsedResponse = sumInput.safeParse(req.body)
 
     if (!parsedResponse.success) {
@@ -21,25 +19,23 @@ app.post("/sum", async (req: Request, res: Response) => {
         })
     }
 
-    const answer = await client.output.create({
+    const answer = parsedResponse.data.a + parsedResponse.data.b;
 
+    const response = await client.output.create({
         data: {
             a: parsedResponse.data.a,
             b: parsedResponse.data.b,
-            Req: parsedResponse.data.a + parsedResponse.data.b
-
-        },
-        select: {
-            Req: true,
+            Req: answer
         }
     })
 
     res.json({
-        answer
+        answer,
+        id: response.id
     })
 });
 
-app.get("/sum", (req: Request, res: Response) => {
+app.get("/sum", async (req, res) => {
     const parsedResponse = sumInput.safeParse({
         a: Number(req.headers["a"]),
         b: Number(req.headers["b"])
@@ -53,7 +49,16 @@ app.get("/sum", (req: Request, res: Response) => {
 
     const answer = parsedResponse.data.a + parsedResponse.data.b;
 
+    const response = await client.output.create({
+        data: {
+            a: parsedResponse.data.a,
+            b: parsedResponse.data.b,
+            Req: answer
+        }
+    })
+
     res.json({
-        answer
+        answer,
+        id: response.id
     })
 });
